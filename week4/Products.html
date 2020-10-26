@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>產品列表(串接 api)</title>
+  <!-- BS4 CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+  <div id="app" class="container mt-3">
+    <div>
+      <div class="text-right mt-4">
+        <button class="btn btn-primary" @click="openModal('new')">
+          建立新的產品
+        </button>
+      </div>
+      <!-- BS4 表格 -->
+      <table class="table mt-4">
+        <thead>
+          <tr>
+            <th width="120">
+              分類
+            </th>
+            <th>
+              產品名稱
+            </th>
+            <th width="120">
+              原價
+            </th>
+            <th width="120">
+              售價
+            </th>
+            <th width="100">
+              是否啟用
+            </th>
+            <th width="120">
+              編輯
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, index) in products" :key="index">
+            <td>{{ item.category }}</td>
+            <td>{{ item.title }}</td>
+            <td class="text-right">
+              {{item.origin_price}}
+            </td>
+            <td class="text-right">
+              {{ item.price }}
+            </td>
+            <td>
+              <span v-if="item.is_enabled" class="text-success">啟用</span>
+              <span v-else>未啟用</span>
+            </td>
+            <td>
+              <div class="btn-group">
+                <button class="btn btn-outline-primary btn-sm" @click="openModal('edit', item)">
+                  編輯
+                </button>
+                <button class="btn btn-outline-danger btn-sm" @click="openModal('delete', item)">
+                  刪除
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- 分頁元件 -->
+      <pagination :pages="pagination" @emit-pages="getProducts"></pagination> 
+      <!-- 產品互動視窗元件 -->
+      <product-modal ref="productModal" :status="status" :is-new="isNew" :user="user" @update="getProducts"></product-modal>
+      <!-- 刪除產品時的警告跳窗元件 -->
+      <del-product-modal :temp-product="tempProduct" :user="user" @update="getProducts"></del-product-modal>
+    </div>
+  </div>
+
+  <!-- BS4 JS, Popper.js, and jQuery -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <!-- 刪除產品時的警告跳窗元件建立 -->
+  <script src="./js/delProductModal.js"></script>
+  <!-- 產品互動視窗元件建立 -->
+  <script src="./js/productModal.js"></script>
+  <!-- 分頁元件建立 -->
+  <script src="./js/pagination.js"></script>
+  <!-- 主要 JS -->
+  <script src="./js/all.js"></script>
+
+</body>
+</html>
